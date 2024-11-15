@@ -16,10 +16,10 @@
 * Users of this class can expect to gain a solid understanding of SOQL in Apex and
 * be prepared to handle data retrieval tasks in Salesforce development.
 * 
-* @author Your Name
+* @author Katende Kinene
 */
 
-public with sharing class SOQL {
+public with sharing class SOQL { 
     
     /**
      * Question 1
@@ -28,9 +28,11 @@ public with sharing class SOQL {
      * @return List of all leads with Id, LastName, Company, Phone, Email
      * Update the corresponding test class and testGetAllLeads method to cover this method
      */
-    //[public | private ] [static] data_type method_name (input parameters) {
+    public static List<Lead> getAllLeads () {
     //  The body of the method
-    //}
+    List<Lead> allLeads =[SELECT Id, LastName, Company, Phone, Email FROM Lead];
+    return allLeads;
+    }
 
     /**
      * Question 2
