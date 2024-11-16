@@ -55,9 +55,20 @@ public with sharing class SOQL {
      * @return A list of Contact Ids.
      * Update the corresponding test class and testGetContactIdsByLastName method to cover this method
      */
-    //[public | private ] [static] data_type method_name (input parameters) {
+    public static List<Id> getContactIdsByLastName (List<Contact> contacts) {
     //  The body of the method
-    //}
+   /* List<Contact> contactIds=[SELECT Id, LastName FROM Contact WHERE LastName ='Smith' OR LastName = 'Jones'];*/
+    //System.debug('The result is ' + contactIds);
+
+    List<Id> contactIdsList = new List<Id>();
+    for (Contact con : contacts){
+        if(con.LastName=='Smith' ||con.LastName=='Jones'){
+        contactIdsList.add(con.Id);
+        System.debug(con.Id);
+        }
+    }
+    return contactIdsList;
+    }   
 
     /**
      * Question 4
