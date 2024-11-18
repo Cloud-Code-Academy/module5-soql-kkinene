@@ -146,7 +146,10 @@ public with sharing class SOQL {
      * @return A list of Opportunity records.
      */
     public static List<Opportunity> getOpportunitiesByNameKeyword(String keyword) {
-        return null; // Replace null with the variable you used to store the result
+
+        String searchString='%'+keyword+'%';
+        List<Opportunity> keywordOpps =[SELECT Name, StageName, CloseDate, AccountId FROM Opportunity WHERE Name LIKE :searchString];
+        return keywordOpps; // Replace null with the variable you used to store the result
     }
 
     /**
@@ -155,7 +158,8 @@ public with sharing class SOQL {
      * @return A list of Case records.
      */
     public static List<Case> getFilterCaseOrigins() {
-        return null; // Replace null with the variable you used to store the result
+        List<Case> caseOriginList =[SELECT Status, AccountId, Origin FROM Case WHERE Origin NOT IN ('Web', 'Email' , '') ];
+        return caseOriginList; // Replace null with the variable you used to store the result
     }
 
     /**
