@@ -172,9 +172,14 @@ public with sharing class SOQL {
      * @return A list of Lead records.
      * Update the corresponding test class and testGetLeadsBySourceOrTitle method to cover this method
      */
-    //[public | private ] [static] data_type method_name (input parameters) {
-    //  The body of the method
-    //}    
+    public static List<Lead> getLeadsBySourceOrTitle (String leadSrc, String keyWord) {
+        String stringToSearchFor ='%'+keyWord+'%';
+        //  The body of the method
+        List<Lead> leadRecs=[SELECT LastName, Company, Phone, Email, LeadSource, Title FROM Lead WHERE leadSource = :leadSrc OR Title LIKE :stringToSearchFor];
+        //The keyword LIKE can be interpreted as contains when % is used on both sides of a string
+
+        return leadRecs;
+    }    
 
     /**
      * Question 11
@@ -185,6 +190,7 @@ public with sharing class SOQL {
      */
     public static List<String> getContactNamesByAccount(Id accountId) {
         // Create a list to hold the Contact LastNames
+        //List<Contact> allAccountContacts=
 
         // Query the Contacts
         // Loop through each Contact and add the LastName to the list
