@@ -360,7 +360,13 @@ public with sharing class SOQL {
      * @return An Account record with related Opportunities.
      */
     public static Account getAccountAndOpportunitiesFromAccountId(Id accountId) {
-        return null; // Replace null with the variable you used to store the result
+        Account accountWithOpportunities = [SELECT Id, Name, 
+            (SELECT Id, Name, Amount, CloseDate FROM Opportunities)
+        FROM Account 
+        WHERE Id = :accountId
+        LIMIT 1
+    ];
+    return accountWithOpportunities;
     }
 
     /**
