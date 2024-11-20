@@ -319,13 +319,14 @@ public with sharing class SOQLTest {
         Opportunity testOpp3 = new Opportunity(Name = 'Test Opportunity 3', StageName = 'Closed Lost', Amount = 15000, CloseDate = Date.today(), Close_Reason__c = 'Lost: Price');
         Opportunity testOpp4 = new Opportunity(Name = 'Test Opportunity 4', StageName = 'Closed Won', Amount = 10000, CloseDate = Date.today(), Close_Reason__c = 'Won: Price');
 
-        //I don't know why this code worked below. 
+       /* //I don't know why this code worked below. 
         List<Opportunity> testOpps= new List<Opportunity>();
         testOpps.add(testOpp1);
         testOpps.add(testOpp2);
         testOpps.add(testOpp3);
         testOpps.add(testOpp4);
-        insert testOpps;
+        insert testOpps;*/
+        insert new List<Opportunity>{ testOpp1, testOpp2, testOpp3, testOpp4 };
 
         // Call the method to test
         Decimal totalRevenue = SOQL.getTotalRevenueByStage('Closed Won');
