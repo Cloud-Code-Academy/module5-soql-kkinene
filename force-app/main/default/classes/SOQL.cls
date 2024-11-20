@@ -399,9 +399,17 @@ public with sharing class SOQL {
      */
     public static List<Account> findAccountsByLeadEmailDomains(Set<Id> leadIds) {
         // Query the Leads
-
-        // Create a set of email domains from the Leads
-
+        List <Lead> listOfLeads = [SELECT Id, Email, Name, Company, LastName, Status, Website FROM Lead WHERE Id IN :leadIds];
+        // Create a set of email domains from the Leads 
+        Set<String> emailDomains=new Set<String>();
+        for(Lead tempLead: listOfLeads){
+            if(tempLead.Email!=null){
+                String tempLeadDomain = tempLead.Email.split('@')[1];
+                String tempWebsite='www.'+tempLeadDomain;
+                emailDomains.add(tempWebsite);
+            }
+        }
+        
         // Loop through each Lead
 
             // Get the email from the Lead
@@ -412,7 +420,8 @@ public with sharing class SOQL {
 
         
         // Query the Accounts
-        return null; // Replace null with the variable you used to store the result
+        List<Account> acctDomains=[SELECT Id, Website FROM Account WHERE Website IN :emailDomains];
+        return acctDomains; // Replace null with the variable you used to store the result
     }
 
     /**
