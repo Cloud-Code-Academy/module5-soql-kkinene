@@ -431,33 +431,40 @@ public with sharing class SOQL {
      * Example: cloneLineItems('001XXXXXXXXXXXX', [list of opportunity ids]) should clone the line items from the Opportunity with the Id to each Opportunity in the list
      * @param Original Opportunity Id
      * @param List of cloned Opportunity Ids
-     */
-    public static void cloneLineItems(Id origOppId, List<Id> cloneOppIds) {
-        // Query the original Opportunity Line Items
-        List<OpportunityLineItem> oppLineItems= [SELECT Id, OpportunityId, Product2Id, Quantity, TotalPrice, UnitPrice
+     */public static void cloneLineItems(Id origOppId, List<Id> cloneOppIds) {
+    // Query the original Opportunity Line Items
+    List<OpportunityLineItem> oppLineItems = [
+        SELECT Id, OpportunityId, Product2Id, Quantity, UnitPrice, PricebookEntryId
         FROM OpportunityLineItem
-        WHERE OpportunityId = :origOppId];
-        // Create a list to hold the new line items
-        List<OpportunityLineItem> clonedLineItems = new List<OpportunityLineItem>();
-        // Generate a random number between 1 and 3
-        Integer random0To3=(Integer)Math.floor(Math.random()*10)+1;
-        if(random0To3>3){
-            random0To3=3;
-        }else if(random0To3<1){
-            random0To3=1;
-        }
-        // Loop through each cloned Opportunity Id
-        for(Id tempId: cloneOppIds){
-            OpportunityLineItem testLineItem = new OpportunityLineItem(OpportunityId = tempId.Id, Quantity = tempId.Quantity+random0To3, PricebookEntryId = tempId.PricebookEntryId, TotalPrice = tempId.TotalPrice);
-            clonedLineItems.add(testLineItem);
-        }
-            // Loop through each original line item
+        WHERE OpportunityId = :origOppId
+    ];
 
-                // Clone the original line item and add the random number to the quantity
+    // Create a list to hold the new line items
+    List<OpportunityLineItem> clonedLineItems = new List<OpportunityLineItem>();
 
-        // Insert the new line items
+    // Generate a random number between 1 and 3
+    Integer random1To3 = (Integer)Math.ceil(Math.random() * 3);
+
+    // Loop through each cloned Opportunity Id
+    for (Id cloneOppId : cloneOppIds) {
+        for (OpportunityLineItem origLineItem : oppLineItems) {
+            // Clone the original line item
+            OpportunityLineItem newLineItem = new OpportunityLineItem(
+                OpportunityId = cloneOppId,
+                PricebookEntryId = origLineItem.PricebookEntryId,
+                Quantity = origLineItem.Quantity + random1To3,
+                UnitPrice = origLineItem.UnitPrice
+            );
+            clonedLineItems.add(newLineItem);
+        }
+    }
+
+    // Insert the new line items
+    if (!clonedLineItems.isEmpty()) {
         insert clonedLineItems;
     }
+}
+
     
     /**
      * Question 24

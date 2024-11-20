@@ -679,6 +679,7 @@ public with sharing class SOQLTest {
         testProduct.Description='Test Product Entry For Product';
         testProduct.productCode = 'SFDCPanther-123';
         testProduct.isActive = true;
+        testProduct.percentOfOpening__c=25;
         insert testProduct;
 
         // insert pricebook entry for the product
