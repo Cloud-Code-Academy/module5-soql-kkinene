@@ -488,17 +488,55 @@ public with sharing class SOQL {
      */
     public static void setPrimaryContact() {
         //Use the getOpportunityDetailsForClosedWon() method to get the Opportunities
-
+        List<Opportunity> listOpps=SOQL.getOpportunityDetailsForClosedWon();
         // Create a set of Account Ids from the Opportunities
-
+        Set<Id> acctIDs=new Set<Id>();
+        for(Opportunity tempOpp: listOpps){
+            if(tempOpp.AccountId != null){
+                acctIDs.add(tempOpp.AccountId);
+            }
+        }
         // Query the Contacts
 
-        // Loop through each Contact and add the Account Id and Contact to the map
+        List<Contact> oppContacts=[SELECT AccountId, Id
+        FROM Contact
+        WHERE AccountId IN :acctIDs];
+
+        // Loop through each Opp and add the Id to the set
+        Set<Id> oppIDs=new Set<Id>();
+        for (Opportunity tempOpp: listOpps) {
+        //    
+            if(tempOpp.Id != null){
+                oppIDs.add(tempOpp.Id);
+            }
+        }
+        // Create a Map to hold AccountId as key and a list of Contacts as value
+        Map<Id, List<Contact>> accountToContactsMap = new Map<Id, List<Contact>>();
+
+        // Loop through the list of contacts
+        for (Contact con : oppContacts) {
+            // Check if the map already contains the AccountId
+            if (accountToContactsMap.containsKey(con.AccountId)) {
+                // If yes, add the contact to the existing list
+                accountToContactsMap.get(con.AccountId).add(con);
+            } else {
+                // If no, create a new list with this contact and put it in the map
+                accountToContactsMap.put(con.AccountId, new List<Contact>{con});
+            }
+        }
         
-        // Loop through each Opportunity
-
-                // Update the Opportunity primary contact from accountToContactMap
-
+        // Loop through the list of contacts
+        for (Contact con : oppContacts) {
+            // Check if the map already contains the AccountId
+            if (accountToContactsMap.containsKey(con.AccountId)) {
+                // If yes, add the contact to the existing list
+                accountToContactsMap.get(con.AccountId).add(con);
+            } else {
+                // If no, create a new list with this contact and put it in the map
+                accountToContactsMap.put(con.AccountId, new List<Contact>{con});
+            }
+        }
         // Update the Opportunities
+        update listOpps;
     }
 }
