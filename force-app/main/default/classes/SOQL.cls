@@ -524,19 +524,25 @@ public with sharing class SOQL {
                 accountToContactsMap.put(con.AccountId, new List<Contact>{con});
             }
         }
-        
-        // Loop through the list of contacts
-        for (Contact con : oppContacts) {
-            // Check if the map already contains the AccountId
-            if (accountToContactsMap.containsKey(con.AccountId)) {
-                // If yes, add the contact to the existing list
-                accountToContactsMap.get(con.AccountId).add(con);
-            } else {
-                // If no, create a new list with this contact and put it in the map
-                accountToContactsMap.put(con.AccountId, new List<Contact>{con});
+        // Loop through each Opportunity
+        for (Opportunity tempOpp : listOpps) {
+            // Check if the Opportunity's AccountId exists in the map
+            if (accountToContactsMap.containsKey(tempOpp.AccountId)) {
+                // Get the list of Contacts for the Account
+                List<Contact> contactsForAccount = accountToContactsMap.get(tempOpp.AccountId);
+
+                // Check if the list is not empty
+                if (!contactsForAccount.isEmpty()) {
+                    // Update the Opportunity's Primary Contact field
+                    // Assuming Primary_Contact__c is a custom lookup field on Opportunity for Contact
+                    tempOpp.Primary_Contact__c = contactsForAccount[0].Id; // Assign the first Contact's Id
+                }
             }
         }
-        // Update the Opportunities
-        update listOpps;
+
+        // Perform DML to update the opportunities
+        if (!listOpps.isEmpty()) {
+            update listOpps; // Save the updated Opportunities
+        }
     }
 }
