@@ -29,9 +29,9 @@ public with sharing class SOQL {
      * Update the corresponding test class and testGetAllLeads method to cover this method
      */
     public static List<Lead> getAllLeads () {
-    //  The body of the method
-    List<Lead> allLeads =[SELECT Id, LastName, Company, Phone, Email FROM Lead];
-    return allLeads;
+        //  The body of the method
+        List<Lead> allLeads =[SELECT Id, LastName, Company, Phone, Email FROM Lead];
+        return allLeads;
     }
 
     /**
@@ -42,10 +42,10 @@ public with sharing class SOQL {
      * Update the corresponding test class and testGetContactsByFirstName method to cover this method
      */
     public static List<Contact> getContactsByFirstName () {
-    //  The body of the method
-    List<Contact> contactRecords=[SELECT Id, FirstName, LastName, Name FROM Contact WHERE FirstName='John'];
-    //System.debug('The result is ' + contactRecords);
-    return contactRecords;
+        //  The body of the method
+        List<Contact> contactRecords=[SELECT Id, FirstName, LastName, Name FROM Contact WHERE FirstName='John'];
+        //System.debug('The result is ' + contactRecords);
+        return contactRecords;
     }
 
     /**
@@ -56,18 +56,18 @@ public with sharing class SOQL {
      * Update the corresponding test class and testGetContactIdsByLastName method to cover this method
      */
     public static List<Id> getContactIdsByLastName (List<Contact> contacts) {
-    //  The body of the method
-   /* List<Contact> contactIds=[SELECT Id, LastName FROM Contact WHERE LastName ='Smith' OR LastName = 'Jones'];*/
-    //System.debug('The result is ' + contactIds);
+        //  The body of the method
+        /* List<Contact> contactIds=[SELECT Id, LastName FROM Contact WHERE LastName ='Smith' OR LastName = 'Jones'];*/
+            //System.debug('The result is ' + contactIds);
 
-    List<Id> contactIdsList = new List<Id>();
-    for (Contact con : contacts){
-        if(con.LastName=='Smith' ||con.LastName=='Jones'){
-        contactIdsList.add(con.Id);
-        System.debug(con.Id);
+        List<Id> contactIdsList = new List<Id>();
+        for (Contact con : contacts){
+                if(con.LastName=='Smith' ||con.LastName=='Jones'){
+                contactIdsList.add(con.Id);
+                System.debug(con.Id);
+                }
         }
-    }
-    return contactIdsList;
+        return contactIdsList;
     }   
 
     /**
@@ -80,12 +80,12 @@ public with sharing class SOQL {
      * Update the corresponding test class and testGetClosedWonOpportunityCountByAccount method to cover this method
      */
     public static List<Opportunity> getClosedWonOpportunityCountByAccount (String accountId) {
-    //  The body of the method
-    //a_type a = new a_type();
-    List<Opportunity> closedWonOpps = [SELECT AccountId, Name, StageName, Amount, CloseDate FROM Opportunity WHERE AccountId = :accountId AND StageName='Closed Won'];
-    System.debug('The result is ' + closedWonOpps);
-    //  The body of the method
-    return closedWonOpps;
+        //  The body of the method
+        //a_type a = new a_type();
+        List<Opportunity> closedWonOpps = [SELECT AccountId, Name, StageName, Amount, CloseDate FROM Opportunity WHERE AccountId = :accountId AND StageName='Closed Won'];
+        System.debug('The result is ' + closedWonOpps);
+        //  The body of the method
+        return closedWonOpps;
     }
 
     /**
@@ -132,10 +132,10 @@ public with sharing class SOQL {
      * Update the corresponding test class and testGetContactsByEmailDomain method to cover this method
      */
     public static List<Contact> getContactsByEmailDomain ( ) {
-    //  The body of the method
-    List <Contact> allContacts = [SELECT Id, FirstName, LastName, Name, Email FROM Contact WHERE Email LIKE '%example.com'];
+        //  The body of the method
+        List <Contact> allContacts = [SELECT Id, FirstName, LastName, Name, Email FROM Contact WHERE Email LIKE '%example.com'];
 
-    return allContacts;
+        return allContacts;
     }
 
     /**
@@ -226,7 +226,7 @@ public with sharing class SOQL {
             // Return the total revenue or 0 if null
             return totalAmount != null ? (Decimal)totalAmount : 0;
         }
-    return 0; // Default to 0 if no records are found
+        return 0; // Default to 0 if no records are found
     }
 
     /**
@@ -345,9 +345,10 @@ public with sharing class SOQL {
         
 
         // Check if a contact was found and its Account is not null
-    if (!contactInfo.isEmpty() && contactInfo[0].Account != null) {
-        acctName = contactInfo[0].Account.Name;
-    }
+        if (!contactInfo.isEmpty() && contactInfo[0].Account != null) {
+            acctName = contactInfo[0].Account.Name;
+            System.debug('Contact found and Account name = '+acctName);
+        }
 
         return acctName; // Replace null with the variable you used to store the result
     }    
@@ -364,9 +365,8 @@ public with sharing class SOQL {
             (SELECT Id, Name, Amount, CloseDate FROM Opportunities)
         FROM Account 
         WHERE Id = :accountId
-        LIMIT 1
-    ];
-    return accountWithOpportunities;
+        LIMIT 1];
+        return accountWithOpportunities;
     }
 
     /**
@@ -431,39 +431,40 @@ public with sharing class SOQL {
      * Example: cloneLineItems('001XXXXXXXXXXXX', [list of opportunity ids]) should clone the line items from the Opportunity with the Id to each Opportunity in the list
      * @param Original Opportunity Id
      * @param List of cloned Opportunity Ids
-     */public static void cloneLineItems(Id origOppId, List<Id> cloneOppIds) {
-    // Query the original Opportunity Line Items
-    List<OpportunityLineItem> oppLineItems = [
-        SELECT Id, OpportunityId, Product2Id, Quantity, UnitPrice, PricebookEntryId
-        FROM OpportunityLineItem
-        WHERE OpportunityId = :origOppId
-    ];
+     */
+    public static void cloneLineItems(Id origOppId, List<Id> cloneOppIds) {
+        // Query the original Opportunity Line Items
+        List<OpportunityLineItem> oppLineItems = [
+            SELECT Id, OpportunityId, Product2Id, Quantity, UnitPrice, PricebookEntryId
+            FROM OpportunityLineItem
+            WHERE OpportunityId = :origOppId
+        ];
 
-    // Create a list to hold the new line items
-    List<OpportunityLineItem> clonedLineItems = new List<OpportunityLineItem>();
+        // Create a list to hold the new line items
+        List<OpportunityLineItem> clonedLineItems = new List<OpportunityLineItem>();
 
-    // Generate a random number between 1 and 3
-    Integer random1To3 = (Integer)Math.ceil(Math.random() * 3);
+        // Generate a random number between 1 and 3
+        Integer random1To3 = (Integer)Math.ceil(Math.random() * 3);
 
-    // Loop through each cloned Opportunity Id
-    for (Id cloneOppId : cloneOppIds) {
-        for (OpportunityLineItem origLineItem : oppLineItems) {
-            // Clone the original line item
-            OpportunityLineItem newLineItem = new OpportunityLineItem(
-                OpportunityId = cloneOppId,
-                PricebookEntryId = origLineItem.PricebookEntryId,
-                Quantity = origLineItem.Quantity + random1To3,
-                UnitPrice = origLineItem.UnitPrice
-            );
-            clonedLineItems.add(newLineItem);
+        // Loop through each cloned Opportunity Id
+        for (Id cloneOppId : cloneOppIds) {
+            for (OpportunityLineItem origLineItem : oppLineItems) {
+                // Clone the original line item
+                OpportunityLineItem newLineItem = new OpportunityLineItem(
+                    OpportunityId = cloneOppId,
+                    PricebookEntryId = origLineItem.PricebookEntryId,
+                    Quantity = origLineItem.Quantity + random1To3,
+                    UnitPrice = origLineItem.UnitPrice
+                );
+                clonedLineItems.add(newLineItem);
+            }
+        }
+
+        // Insert the new line items
+        if (!clonedLineItems.isEmpty()) {
+            insert clonedLineItems;
         }
     }
-
-    // Insert the new line items
-    if (!clonedLineItems.isEmpty()) {
-        insert clonedLineItems;
-    }
-}
 
     
     /**
@@ -476,9 +477,8 @@ public with sharing class SOQL {
         List<Opportunity> oppDetailsClosedWon = [
         SELECT Name, AccountId, Account.Name, OwnerId, (SELECT Contact.Id, Contact.Name FROM OpportunityContactRoles)
         FROM Opportunity
-        WHERE StageName = 'Closed Won'
-    ];
-            return oppDetailsClosedWon; // Replace null with the variable you used to store the result
+        WHERE StageName = 'Closed Won'];
+        return oppDetailsClosedWon; // Replace null with the variable you used to store the result
     }
 
     /**
@@ -486,7 +486,7 @@ public with sharing class SOQL {
      * Sets the 'Primary_Contact__c' field for all Closed Won Opportunities to first Contact on the Account.
      * Example: setPrimaryContact() should set the 'Primary_Contact__c' field for every Opportunity in the org
      */
-   public static void setPrimaryContact() {
+    public static void setPrimaryContact() {
         // Step 1: Use the getOpportunityDetailsForClosedWon() method to get the Opportunities
         List<Opportunity> listOpps=SOQL.getOpportunityDetailsForClosedWon();
 
@@ -512,11 +512,12 @@ public with sharing class SOQL {
             if(tempContact.Id != null){
               
                 // Check if the map already contains the AccountId
-                if (accountToContactsMap.containsKey(tempContact.AccountId)) {
-                    // If yes, add the contact to the existing list
+                if (!accountToContactsMap.containsKey(tempContact.AccountId)) {
+                    // If no, create a new list with this contact and put it in the map
+                    
                     accountToContactsMap.put(tempContact.AccountId, new List<Contact> ());
                 } else {
-                    // If no, create a new list with this contact and put it in the map
+                    // If yes, add the contact to the existing list
                     accountToContactsMap.get(tempContact.AccountId).add(tempContact);
                 }
             }
@@ -528,10 +529,13 @@ public with sharing class SOQL {
                 // Get the list of Contacts for the Account
                 List<Contact> contactsForAccount = accountToContactsMap.get(tempOpp.AccountId);
 
+                //System.debug('List of Contacts '+ contactsForAccount);
+
                 // Check if the list is not empty
                 if (!contactsForAccount.isEmpty()) {
                     // Update the Opportunity's Primary Contact field
                     // Assuming Primary_Contact__c is a custom lookup field on Opportunity for Contact
+                   // System.debug('tempOpp.Primary '+ tempOpp.Primary_Contact__c);
                     tempOpp.Primary_Contact__c = contactsForAccount[0].Id; // Assign the first Contact's Id
                 }
             }
