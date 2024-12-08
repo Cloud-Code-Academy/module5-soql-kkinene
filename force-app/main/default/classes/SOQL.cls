@@ -41,9 +41,10 @@ public with sharing class SOQL {
      * @return A list of Contact records.
      * Update the corresponding test class and testGetContactsByFirstName method to cover this method
      */
-    public static List<Contact> getContactsByFirstName () {
+    public static List<Contact> getContactsByFirstName (String fName) {
+        
         //  The body of the method
-        List<Contact> contactRecords=[SELECT Id, FirstName, LastName, Name FROM Contact WHERE FirstName='John'];
+        List<Contact> contactRecords=[SELECT Id, FirstName, LastName, Name FROM Contact WHERE FirstName=:fName];
         //System.debug('The result is ' + contactRecords);
         return contactRecords;
     }
@@ -56,17 +57,10 @@ public with sharing class SOQL {
      * Update the corresponding test class and testGetContactIdsByLastName method to cover this method
      */
     public static List<Id> getContactIdsByLastName (List<Contact> contacts) {
+        List <String> lastNamesToSearchFor = new List <String>{'Smith', 'Jones'};
         //  The body of the method
-        /* List<Contact> contactIds=[SELECT Id, LastName FROM Contact WHERE LastName ='Smith' OR LastName = 'Jones'];*/
-            //System.debug('The result is ' + contactIds);
+        List<Contact> contactIdsList=[SELECT Id, LastName FROM Contact WHERE LastName IN :lastNamesToSearchFor];
 
-        List<Id> contactIdsList = new List<Id>();
-        for (Contact con : contacts){
-                if(con.LastName=='Smith' ||con.LastName=='Jones'){
-                contactIdsList.add(con.Id);
-                System.debug(con.Id);
-                }
-        }
         return contactIdsList;
     }   
 
@@ -83,7 +77,7 @@ public with sharing class SOQL {
         //  The body of the method
         //a_type a = new a_type();
         List<Opportunity> closedWonOpps = [SELECT AccountId, Name, StageName, Amount, CloseDate FROM Opportunity WHERE AccountId = :accountId AND StageName='Closed Won'];
-        System.debug('The result is ' + closedWonOpps);
+
         //  The body of the method
         return closedWonOpps;
     }
@@ -221,8 +215,7 @@ public with sharing class SOQL {
          // Check if there are any results and handle null values
         if (totalRev != null && totalRev.size() > 0) {
             Object totalAmount = totalRev[0].get('totalAmount');
-            System.debug('Total amount: '+totalRev[0].get('totalAmount'));
-
+            
             // Return the total revenue or 0 if null
             return totalAmount != null ? (Decimal)totalAmount : 0;
         }
@@ -346,8 +339,7 @@ public with sharing class SOQL {
 
         // Check if a contact was found and its Account is not null
         if (!contactInfo.isEmpty() && contactInfo[0].Account != null) {
-            acctName = contactInfo[0].Account.Name;
-            System.debug('Contact found and Account name = '+acctName);
+            acctName = contactInfo[0].Account.Name;            
         }
 
         return acctName; // Replace null with the variable you used to store the result
