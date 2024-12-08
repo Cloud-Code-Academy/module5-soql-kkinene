@@ -63,7 +63,7 @@ public with sharing class SOQL {
 
        List<Id> contactIdsList = new List<Id>();
        for (Contact con : contacts){
-               if(con.LastName=='Smith' ||con.LastName=='Jones'){
+               if(con.LastName == 'Smith' ||con.LastName == 'Jones'){
                contactIdsList.add(con.Id);
                System.debug(con.Id);
                }
@@ -103,9 +103,13 @@ public with sharing class SOQL {
      */
     public static Integer getAccountCount (List <Account> accounts) {
     //  The body of the method
-     Integer acctCount=[SELECT COUNT() FROM Account WHERE Id IN :accounts];
+        Integer acctCount = [
+            SELECT COUNT() 
+            FROM Account 
+            WHERE Id IN :accounts
+        ];
     
-     return acctCount;
+        return acctCount;
     }
 
     /**
@@ -137,7 +141,7 @@ public with sharing class SOQL {
      * @return A list of Contact records.
      * Update the corresponding test class and testGetContactsByEmailDomain method to cover this method
      */
-    public static List<Contact> getContactsByEmailDomain ( ) {
+    public static List<Contact> getContactsByEmailDomain () {
         //  The body of the method
         List <Contact> allContacts = [SELECT Id, FirstName, LastName, Name, Email FROM Contact WHERE Email LIKE '%example.com'];
 
@@ -178,10 +182,13 @@ public with sharing class SOQL {
      * @return A list of Lead records.
      * Update the corresponding test class and testGetLeadsBySourceOrTitle method to cover this method
      */
-    public static List<Lead> getLeadsBySourceOrTitle (String leadSrc, String keyWord) {
+    public static List<Lead> getLeadsBySourceOrTitle (String leadSource, String keyWord) {
         String stringToSearchFor ='%'+keyWord+'%';
         //  The body of the method
-        List<Lead> leadRecs=[SELECT LastName, Company, Phone, Email, LeadSource, Title FROM Lead WHERE leadSource = :leadSrc OR Title LIKE :stringToSearchFor];
+        List<Lead> leadRecs=[
+            SELECT LastName, Company, Phone, Email, LeadSource, Title FROM Lead 
+            WHERE leadSource = :leadSource OR Title LIKE :stringToSearchFor
+        ];
         //The keyword LIKE can be interpreted as contains when % is used on both sides of a string
 
         return leadRecs;
@@ -222,7 +229,11 @@ public with sharing class SOQL {
     public static Decimal getTotalRevenueByStage(String stage) {
         // Use AggregateQuery to get the total revenue
         //Decimal totalRev=[SELECT SUM(Amount) totalAmount FROM Opportunity WHERE StageName = :stage];
-        AggregateResult[] totalRev= [SELECT SUM(Amount) totalAmount FROM Opportunity WHERE StageName = :stage OR Amount >10000];
+        AggregateResult[] totalRev= [
+            SELECT SUM(Amount) totalAmount 
+            FROM Opportunity 
+            WHERE StageName = :stage OR Amount >10000
+        ];
         // Return the total revenue
          // Check if there are any results and handle null values
         if (totalRev != null && totalRev.size() > 0) {
@@ -240,8 +251,14 @@ public with sharing class SOQL {
      * @return A list of the first 10 Accounts ordered by Name.
      */
     public static List<Account> getFirstTenAccounts() {
-        List<Account> firstTenAccts = [SELECT ID, Name FROM Account ORDER BY Name LIMIT 10];
-        return firstTenAccts; // Replace null with the variable you used to store the result
+        // Replace null with the variable you used to store the result
+        return [
+            SELECT ID, Name 
+            FROM Account 
+            ORDER BY Name 
+            LIMIT 10
+        ];
+
     }
     
     /**
