@@ -62,7 +62,7 @@ public with sharing class SOQL {
 
         List<Id> contactIdsList = new List<Id>();
         for (Contact con : contacts){
-                if(con.LastName=='Smith' ||con.LastName=='Jones'){
+                if(con.LastName == 'Smith' || con.LastName == 'Jones') {
                 contactIdsList.add(con.Id);
                 System.debug(con.Id);
                 }
