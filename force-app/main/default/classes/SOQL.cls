@@ -82,7 +82,7 @@ public with sharing class SOQL {
     public static List<Opportunity> getClosedWonOpportunityCountByAccount (String accountId) {
         //  The body of the method
         //a_type a = new a_type();
-        List<Opportunity> closedWonOpps = [SELECT AccountId, Name, StageName, Amount, CloseDate FROM Opportunity WHERE AccountId = :accountId AND StageName='Closed Won'];
+        List<Opportunity> closedWonOpps = [SELECT AccountId, Name, StageName, Amount, CloseDate FROM Opportunity WHERE AccountId = :accountId AND StageName = 'Closed Won'];
         System.debug('The result is ' + closedWonOpps);
         //  The body of the method
         return closedWonOpps;
