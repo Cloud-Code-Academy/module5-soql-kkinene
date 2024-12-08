@@ -59,9 +59,17 @@ public with sharing class SOQL {
     public static List<Id> getContactIdsByLastName (List<Contact> contacts) {
         List <String> lastNamesToSearchFor = new List <String>{'Smith', 'Jones'};
         //  The body of the method
-        List<Contact> contactIdsList=[SELECT Id, LastName FROM Contact WHERE LastName IN :lastNamesToSearchFor];
+       // List<Contact> contactIds=[SELECT Id, LastName FROM Contact WHERE LastName IN :lastNamesToSearchFor];
 
-        return contactIdsList;
+       List<Id> contactIdsList = new List<Id>();
+       for (Contact con : contacts){
+               if(con.LastName=='Smith' ||con.LastName=='Jones'){
+               contactIdsList.add(con.Id);
+               System.debug(con.Id);
+               }
+       }
+       return contactIdsList;
+
     }   
 
     /**
@@ -76,7 +84,11 @@ public with sharing class SOQL {
     public static List<Opportunity> getClosedWonOpportunityCountByAccount (String accountId) {
         //  The body of the method
         //a_type a = new a_type();
-        List<Opportunity> closedWonOpps = [SELECT AccountId, Name, StageName, Amount, CloseDate FROM Opportunity WHERE AccountId = :accountId AND StageName='Closed Won'];
+        List<Opportunity> closedWonOpps = [
+            SELECT AccountId, Name, IsWon, Amount, CloseDate 
+            FROM Opportunity 
+            WHERE AccountId = :accountId AND IsWon = true
+        ];
 
         //  The body of the method
         return closedWonOpps;
