@@ -56,16 +56,20 @@ public with sharing class SOQL {
      * @return A list of Contact Ids.
      * Update the corresponding test class and testGetContactIdsByLastName method to cover this method
      */
-    public static List<Id> getContactIdsByLastName (List<Contact> contacts) {
+    public static List<Id> getContactIdsByLastName (List <Contact> contacts) { 
+        //i don't need the list of contacts... but I am having trouble resolving this
         List <String> lastNamesToSearchFor = new List <String>{'Smith', 'Jones'};
         //  The body of the method
-       // List<Contact> contactIds=[SELECT Id, LastName FROM Contact WHERE LastName IN :lastNamesToSearchFor];
+        List<Contact> contactIds = [
+            SELECT Id, LastName 
+            FROM Contact 
+            WHERE LastName IN :lastNamesToSearchFor
+        ];
 
        List<Id> contactIdsList = new List<Id>();
-       for (Contact con : contacts){
-               if(con.LastName == 'Smith' ||con.LastName == 'Jones'){
-               contactIdsList.add(con.Id);
-               System.debug(con.Id);
+       for (Contact con : contactIds){
+               if(con.Id != null){
+                    contactIdsList.add(con.Id);
                }
        }
        return contactIdsList;
@@ -90,7 +94,6 @@ public with sharing class SOQL {
             WHERE AccountId = :accountId AND IsWon = true
         ];
 
-        //  The body of the method
         return closedWonOpps;
     }
 
