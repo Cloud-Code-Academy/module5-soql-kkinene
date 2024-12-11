@@ -126,16 +126,16 @@ public with sharing class SOQL {
     //  The body of the method
         Map<Id, Task> tasksDueNextWeekMap = new Map<Id, Task>();
 
-        
-        List<Task> taskList = [SELECT Id, ActivityDate, OwnerId, Subject, Status, Priority FROM Task WHERE ActivityDate = NEXT_N_DAYS:7];
-        
-        for (Task task : taskList) {
-            if (task.ActivityDate <= Date.today().addDays(7)) {
-                tasksDueNextWeekMap.put(task.Id, task);
-            }
-        }
+        //The constructor new Map<Id, SObject>(List<SObject>) inherently associates the Id of each object with its respective record. In this case Id with Task Object
+        tasksDueNextWeek = [SELECT Id, ActivityDate, OwnerId, Subject, Status, Priority
+                            FROM Task
+                            WHERE ActivityDate <= :Date.today().addDays(7) AND ActivityDate >= :Date.today()
+                            ];
         return tasksDueNextWeekMap;
+
+        
     }
+    
 
     /**
      * Question 7
