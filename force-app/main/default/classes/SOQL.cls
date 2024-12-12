@@ -432,7 +432,7 @@ public with sharing class SOQL {
         Set<String> emailDomains=new Set<String>();
         for(Lead tempLead: listOfLeads){
             if(tempLead.Email!=null){
-                String tempLeadDomain = tempLead.Email.split('@')[1];
+                String tempLeadDomain = tempLead.subStringAfter('@');
                 String tempWebsite='www.'+tempLeadDomain;
                 emailDomains.add(tempWebsite);
             }
@@ -478,12 +478,13 @@ public with sharing class SOQL {
         for (Id cloneOppId : cloneOppIds) {
             for (OpportunityLineItem origLineItem : oppLineItems) {
                 // Clone the original line item
-                OpportunityLineItem newLineItem = new OpportunityLineItem(
-                    OpportunityId = cloneOppId,
-                    PricebookEntryId = origLineItem.PricebookEntryId,
-                    Quantity = origLineItem.Quantity + random1To3,
-                    UnitPrice = origLineItem.UnitPrice
-                );
+                OpportunityLineItem newLineItem = (OpportunityLineItem) origLineItem.clone(false, false, false, false);
+                
+                // Update the cloned line item fields
+                newLineItem.OpportunityId = cloneOppId;
+                newLineItem.Quantity += random1To3;
+                
+                // Add the cloned line item to the list
                 clonedLineItems.add(newLineItem);
             }
         }
