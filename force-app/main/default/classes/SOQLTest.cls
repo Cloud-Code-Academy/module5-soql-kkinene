@@ -726,6 +726,7 @@ public with sharing class SOQLTest {
         // Assert that the opportunity returned is correct
         try {
             System.assert(opportunities[0].Id == testOpportunity1.Id, 'Returned opportunity ID is incorrect.');
+            System.debug(':::: opp name  = '+opportunities[0].Name);
             System.assert(opportunities[0].Name == 'Test Opportunity 1', 'Returned opportunity name is incorrect.');
             System.assert(opportunities[0].AccountId == testAccount1.Id, 'Returned account ID is incorrect.');
             System.assert(opportunities[0].OwnerId == testUser.Id, 'Returned owner ID is incorrect.');

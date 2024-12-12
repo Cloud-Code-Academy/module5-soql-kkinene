@@ -124,13 +124,14 @@ public with sharing class SOQL {
      */
     public static Map<Id, Task> getTasksDueNextWeek  () {
     //  The body of the method
-        Map<Id, Task> tasksDueNextWeekMap = new Map<Id, Task>();
+    //The constructor new Map<Id, SObject>(List<SObject>) inherently associates the Id of each object with its respective record. In this case Id with Task Object
+        Map<Id, Task> tasksDueNextWeekMap = new Map<Id, Task>(        
+            [SELECT Id, ActivityDate, OwnerId, Subject, Status, Priority
+            FROM Task
+            WHERE ActivityDate <= :Date.today().addDays(7) 
+            AND ActivityDate >= :Date.today()]
+        );
 
-        //The constructor new Map<Id, SObject>(List<SObject>) inherently associates the Id of each object with its respective record. In this case Id with Task Object
-        tasksDueNextWeek = [SELECT Id, ActivityDate, OwnerId, Subject, Status, Priority
-                            FROM Task
-                            WHERE ActivityDate <= :Date.today().addDays(7) AND ActivityDate >= :Date.today()
-                            ];
         return tasksDueNextWeekMap;
 
         
@@ -374,11 +375,12 @@ public with sharing class SOQL {
             acctName = contactInfo[0].Account.Name;            
         }*/
 
-        return [SELECT Account.Name
-                FROM Contact
-                Where Id = :contactId
+        Contact contactRec = [SELECT Account.Name
+                              FROM Contact
+                              Where Id = :contactId
+                            ]; // Replace null with the variable you used to store the result
 
-                ]; // Replace null with the variable you used to store the result
+        return contactRec.Account != null ? contactRec.Account.Name : 'Account Does not Exist';
     }    
 
     /**
@@ -432,7 +434,7 @@ public with sharing class SOQL {
         Set<String> emailDomains=new Set<String>();
         for(Lead tempLead: listOfLeads){
             if(tempLead.Email!=null){
-                String tempLeadDomain = tempLead.subStringAfter('@');
+                String tempLeadDomain = tempLead.Email.substringAfter('@');
                 String tempWebsite='www.'+tempLeadDomain;
                 emailDomains.add(tempWebsite);
             }
@@ -502,11 +504,20 @@ public with sharing class SOQL {
      * Example: getOpportunityDetailsForClosedWon()
      * @return A list of filtered Opportunity
      */
+    /*public static List<Opportunity> getOpportunityDetailsForClosedWon() {    
+        List<Opportunity> oppDetailsClosedWon = [
+            SELECT Name, AccountId, Account.Name, OwnerId, Owner.Name
+            FROM Opportunity
+            WHERE StageName = 'Closed Won'
+            ];
+        return oppDetailsClosedWon; // Replace null with the variable you used to store the result
+    }*/
     public static List<Opportunity> getOpportunityDetailsForClosedWon() {    
         List<Opportunity> oppDetailsClosedWon = [
-        SELECT Name, AccountId, Account.Name, OwnerId, (SELECT Contact.Id, Contact.Name FROM OpportunityContactRoles)
+        SELECT Name, AccountId, Account.Name, OwnerId
         FROM Opportunity
-        WHERE StageName = 'Closed Won'];
+        WHERE StageName = 'Closed Won' AND Name = 'Test Opportunity 1'
+        ];
         return oppDetailsClosedWon; // Replace null with the variable you used to store the result
     }
 
